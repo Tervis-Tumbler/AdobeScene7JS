@@ -1,0 +1,11 @@
+{
+  "name": "@tervis/adobescene7js",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "AdobeScene7JS.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tervis-Tumbler/AdobeScene7JS"
+  },
+  "license": "MIT"
+}
