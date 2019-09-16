@@ -24,27 +24,55 @@ export function New_AdobeScene7URL ({
     $Type,
     $RelativeURL,
     $AsScene7SrcValue,
-    $ExternalURL
+    $ExternalURL,
+    $Width,
+    $Height
 }) {
     if ($AsScene7SrcValue) {
-        if ($Type === "ImageServer") {
-            return `is{${$RelativeURL}}`
-        } else if ($Type === "ImageRender") {
-            return `ir{${$RelativeURL}}`
+        if ($RelativeURL) {
+            if ($Type === "ImageServer") {
+                return `is{${$RelativeURL}}`
+            } else if ($Type === "ImageRender") {
+                return `ir{${$RelativeURL}}`
+            }
         } else if ($ExternalURL) {
             var $ExternalURLWithoutHttps = $ExternalURL.replace(/^https/i, "http")
+
+            if ($Width && $Height) {
+                $ExternalURLWithoutHttps = New_AdobeScene7URL({
+                    $ExternalURL: $ExternalURLWithoutHttps,
+                    $AsScene7SrcValue: false,
+                    $Width,
+                    $Height,
+                    $Host
+                })
+            }
             return `{${$ExternalURLWithoutHttps}}`
         }
     } else {
         var $URL
-        if ($Type === "ImageServer") {
-            $URL = new URL(`https://${$Host}/is/image/${$RelativeURL}`)
-        } else if ($Type === "ImageRender") {
-            $URL = new URL(`https://${$Host}/ir/render/${$RelativeURL}`)
+        if ($RelativeURL) {
+            if ($Type === "ImageServer") {
+                $URL = new URL(`https://${$Host}/is/image/${$RelativeURL}`)
+            } else if ($Type === "ImageRender") {
+                $URL = new URL(`https://${$Host}/ir/render/${$RelativeURL}`)
+            } 
+        } else if ($ExternalURL) {
+            var $ExternalURLAsSrcValue = New_AdobeScene7URL({
+                $Host,
+                $ExternalURL,
+                $AsScene7SrcValue: true
+            })
+            $URL = new URL(`https://${$Host}/is/image/tervis?src=${$ExternalURLAsSrcValue}`)
         }
 
         var $URLSearchParams = new URLSearchParams($URL.search)
-        $URLSearchParams.append('scl', 1)
+        if ($Width && $Height) {
+            $URLSearchParams.append('wid', $Width)
+            $URLSearchParams.append('hei', $Height)            
+        } else {
+            $URLSearchParams.append('scl', 1)
+        }
         $URLSearchParams.append('fmt', 'png-alpha')
         $URL.search = `?${$URLSearchParams.toString()}`
         return decodeURIComponent($URL.href)
