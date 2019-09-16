@@ -30,6 +30,19 @@ export function New_AdobeScene7URL ({
 }) {
     if ($AsScene7SrcValue) {
         if ($RelativeURL) {
+            if ($Width && $Height) {
+                var $FakeBase = "http://removeme"
+                var $URL = new URL($RelativeURL, $FakeBase)
+                var $URLSearchParams = new URLSearchParams($URL.search)
+                if ($Width && $Height) {
+                    $URLSearchParams.append('wid', $Width)
+                    $URLSearchParams.append('hei', $Height)            
+                }
+                $URL.search = `?${$URLSearchParams.toString()}`
+                var $URLAsString = decodeURIComponent($URL.href)
+                $RelativeURL = $URLAsString.replace("http://removeme", "")
+            }
+
             if ($Type === "ImageServer") {
                 return `is{${$RelativeURL}}`
             } else if ($Type === "ImageRender") {
