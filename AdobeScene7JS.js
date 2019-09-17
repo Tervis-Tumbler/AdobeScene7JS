@@ -52,15 +52,17 @@ export function New_AdobeScene7URL ({
             var $ExternalURLWithoutHttps = $ExternalURL.replace(/^https/i, "http")
 
             if ($Width && $Height) {
-                $ExternalURLWithoutHttps = New_AdobeScene7URL({
-                    $ExternalURL: $ExternalURLWithoutHttps,
-                    $AsScene7SrcValue: false,
+                return New_AdobeScene7URL({
+                    $RelativeURL: `tervis?src={${$ExternalURLWithoutHttps}}`,
+                    $Type: "ImageServer",
+                    $AsScene7SrcValue: true,
                     $Width,
                     $Height,
                     $Host
                 })
+            } else {
+                return `{${$ExternalURLWithoutHttps}}`
             }
-            return `{${$ExternalURLWithoutHttps}}`
         }
     } else {
         var $URL
