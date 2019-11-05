@@ -27,7 +27,8 @@ export function New_AdobeScene7URL ({
     $ExternalURL,
     $Width,
     $Height,
-    $Format
+    $Format,
+    $Cache
 }) {
     if ($AsScene7SrcValue) {
         if ($RelativeURL) {
@@ -94,6 +95,10 @@ export function New_AdobeScene7URL ({
             $Format = 'png-alpha'
         }
         $URLSearchParams.append('fmt', $Format)
+
+        if ($Cache) {
+            $URLSearchParams.append('cache', $Cache)
+        }
         
         $URL.search = `?${$URLSearchParams.toString()}`
         return decodeURIComponent($URL.href)
